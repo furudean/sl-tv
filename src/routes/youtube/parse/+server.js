@@ -36,12 +36,14 @@ export async function GET({ url }) {
   }
 
   const item = data.items?.[0]
+
+  console.log(item)
   
   const response = {
     id: watch_id,
     title: item?.snippet?.title,
     channel_title: item?.snippet?.channelTitle,
-    duration: iso_8601_to_seconds(item?.contentDetails?.duration),
+    duration: iso_8601_to_seconds(item?.contentDetails?.duration || "P0S"),
     requested_by,
   }
 
