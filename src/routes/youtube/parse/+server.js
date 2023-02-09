@@ -1,6 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import { youtube } from "$lib/server/youtube.js";
 import { GOOGLE_CLOUD_API_KEY } from '$env/static/private'
+import { iso_8601_to_seconds } from "$lib/date"
 
 const WATCH_ID_FROM_URL = /^.*(youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/
 
@@ -10,25 +11,6 @@ const response_options = {
     // interpereted as ascii instead of utf-8...
     "Content-Type": "application/json; charset=utf-8"
   }
-}
-
-/** 
- * @param {string | null | undefined} date 
- * @returns {number}
- */
-function iso_8601_to_seconds(date) {
-  const regexp = /P(?:(?<days>\d*)D)?T(?:(?<hours>\d*)H)?(?:(?<minutes>\d*)M)?(?:(?<seconds>\d*)S)/g
-  const as_number = (/** @type {string | undefined} */ x) => Number(x) || 0
-
-  if (!date) return 0
-
-  let [_, days, hours, minutes, seconds] = [...date.matchAll(regexp)][0].map(as_number)
-
-  seconds += minutes * 60
-  seconds += hours * 60 * 60
-  seconds += days * 60 * 60 * 24
-
-  return seconds
 }
 
 /** @type {import('./$types').RequestHandler} */
