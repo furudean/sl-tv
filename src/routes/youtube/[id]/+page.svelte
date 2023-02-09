@@ -4,7 +4,7 @@
 </script>
 
 <div class="video">
-	<span>loading youtube embed...</span>
+	<span>waiting for youtube embed...</span>
 	<iframe
 		width="560"
 		height="315"
