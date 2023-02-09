@@ -16,6 +16,7 @@ const response_options = {
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ url }) {
   const query = url.searchParams.get('q')
+  const user = url.searchParams.get('u')
 
   if (query === null) throw error(400, 'missing parameter q')
 
@@ -40,7 +41,8 @@ export async function GET({ url }) {
     id: watch_id,
     title: item?.snippet?.title,
     channel_title: item?.snippet?.channelTitle,
-    duration: iso_8601_to_seconds(item?.contentDetails?.duration)
+    duration: iso_8601_to_seconds(item?.contentDetails?.duration),
+    user,
   }
 
   return json(response, response_options);
