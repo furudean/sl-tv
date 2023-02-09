@@ -12,6 +12,25 @@ const response_options = {
   }
 }
 
+/** 
+ * @param {string | null | undefined} date 
+ * @returns {number}
+ */
+function iso_8601_to_seconds(date) {
+  const regexp = /P(?:(?<days>\d*)D)?T(?:(?<hours>\d*)H)?(?:(?<minutes>\d*)M)?(?:(?<seconds>\d*)S)/g
+  const as_number = (/** @type {string | undefined} */ x) => Number(x) || 0
+
+  if (!date) return 0
+
+  let [_, days, hours, minutes, seconds] = [...date.matchAll(regexp)][0].map(as_number)
+
+  seconds += minutes * 60
+  seconds += hours * 60 * 60
+  seconds += days * 60 * 60 * 24
+
+  return seconds
+}
+
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ url }) {
   const query = url.searchParams.get('q')
@@ -26,19 +45,20 @@ export async function GET({ url }) {
   const { data } = await youtube.videos.list({
     key: GOOGLE_CLOUD_API_KEY,
     id: [watch_id],
-    part: ['snippet'],
+    part: ['snippet', 'contentDetails'],
   })
 
   if (data.pageInfo?.totalResults !== 1) {
     throw error(404, 'video not found')
   }
 
-  const snippet = data.items?.[0].snippet
-
+  const item = data.items?.[0]
+  
   const response = {
     id: watch_id,
-    title: snippet?.title,
-    channel_title: snippet?.channelTitle
+    title: item?.snippet?.title,
+    channel_title: item?.snippet?.channelTitle,
+    duration: iso_8601_to_seconds(item?.contentDetails?.duration)
   }
 
   return json(response, response_options);
