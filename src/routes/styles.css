@@ -1,3 +1,8 @@
+:root {
+	--line-height: 1.5;
+	font-size: 18px;
+}
+
 body {
 	min-height: 100vh;
 	margin: 0;
@@ -25,8 +30,31 @@ figcaption {
 	padding: 0 1rem 0;
 }
 
+.prose code {
+	font-family: Courier, monospace;
+	font-size: 0.9em;
+	border: 1px solid currentColor;
+	border-radius: 0.25em;
+	padding: 0 0.25em;
+}
+
+.prose h1 {
+	font-size: 2.625rem;
+	line-height: 1;
+}
+
+.prose h2 {
+	font-size: 2.06rem;
+	line-height: 1;
+}
+
+.prose h3 {
+	font-size: 1.625rem;
+	line-height: 1;
+}
+
 .prose p {
-	line-height: 1.4;
+	line-height: var(--line-height);
 }
 
 .prose h1 {
@@ -40,4 +68,5 @@ figcaption {
 .prose li {
 	margin-top: 0.5rem;
 	margin-bottom: 0;
+	line-height: var(--line-height);
 }

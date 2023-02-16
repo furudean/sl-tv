@@ -6,7 +6,10 @@
 </script>
 
 <main class="container" style:--bg={background}>
-	<span>paused</span>
+	<div class="prose">
+		<h1>(paused)</h1>
+		<p class="shy">resume with <code>resume</code> command</p>
+	</div>
 </main>
 
 <style>
@@ -15,6 +18,7 @@
 		width: 100vw;
 		height: auto;
 		aspect-ratio: 16 / 9;
+		overflow: hidden;
     }
 
 	.container::before {
@@ -24,7 +28,7 @@
 		background: var(--bg);
 		background-size: 100%;
 		background-repeat: no-repeat;
-		filter: blur(4px);
+		filter: blur(6px);
 	}
 
 	.container::after {
@@ -36,13 +40,16 @@
 		background-repeat: no-repeat;
 	}
 
-	span {
+	div {
 		z-index: 1;
 		position: absolute;
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
-		font-size: 4em;
 		text-align: center;
+	}
+
+	.shy {
+		opacity: 0.75;
 	}
 </style>
