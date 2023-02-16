@@ -1,20 +1,23 @@
 <script>
 	/** @type {import('./$types').PageData} */
 	export let data
+
+	const query = "?autoplay=1" + 
+		(data.timestamp ? `&start=${data.timestamp}` : "")
 </script>
 
-<div class="video">
+<main class="video">
 	<span>waiting for youtube embed...</span>
 	<iframe
 		width="560"
 		height="315"
-		src="https://www.youtube-nocookie.com/embed/{data.id}?autoplay=1"
+		src="https://www.youtube-nocookie.com/embed/{data.id}{query}"
 		title="YouTube video player"
 		frameborder="0"
 		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 		allowfullscreen
 	/>
-</div>
+</main>
 
 <style>
 	.video {

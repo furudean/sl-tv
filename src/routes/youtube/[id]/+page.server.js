@@ -1,6 +1,7 @@
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ params }) {
+export async function load({ params, url }) {
 	return {
-		id: params.id
+		id: params.id,
+		timestamp: url.searchParams.get('t')
 	}
 }

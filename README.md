@@ -1,22 +1,20 @@
-# create-svelte
+# sl-tv
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+sl-tv is an open source video player system for second life. it allows you to play youtube videos in a somewhat synchronized fashion with other users in-world by embedding videos as media.
 
-## Creating a project
+## system
 
-If you're seeing this, you've probably already done this step. Congrats!
+the system consists of three components;
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+* web pages that embed content from video providers
+* LSL scripts that provide controls and open said embeds as media in-world
+* helpful APIs for parsing video metadata from provided URLs
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+## developing
 
-## Developing
+in order to run the website and APIs, first install dependencies with `npm install`. 
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+start a development server:
 
 ```bash
 npm run dev
@@ -27,12 +25,12 @@ npm run dev -- --open
 
 ## Building
 
-To create a production version of your app:
+to create a production version of web and APIs:
 
 ```bash
 npm run build
 ```
 
-You can preview the production build with `npm run preview`.
+this spits out a node version of the app, but multiple adapters are supported. check out [kit.svelte.dev/docs/adapters](https://kit.svelte.dev/docs/adapters) for more information.
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+you can preview the production build with `npm run preview`.
