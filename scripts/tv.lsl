@@ -102,7 +102,7 @@ next(integer first) {
 
         return;
     }
-    
+
     idle_timeout_on_timer = FALSE;
     is_playing = TRUE;
     playback_seconds = 0;
@@ -126,7 +126,7 @@ next(integer first) {
     } else {
         llSay(0, "▶ " + np_title + " (" + np_source_url + ")");
     }
-    
+
     llSetTimerEvent(1.0);
 }
 
@@ -149,7 +149,7 @@ pause() {
 
     set_media(API_BASE_URL + np_player_url + "/paused");
     set_texture("on");
-    
+
     set_idle_timeout(3600.0);
 }
 
@@ -218,7 +218,7 @@ default
 
         if (cmd == "pause") {
             if (is_playing == FALSE) return;
-    
+
             pause();
             llSay(0, user_link(from) + " paused playback");
 
@@ -298,13 +298,13 @@ default
         }
     }
 
-    timer() {        
+    timer() {
         if (idle_timeout_on_timer) {
             idle_timeout_on_timer = FALSE;
             llSetTimerEvent(0.0);
 
             stop();
-            return;    
+            return;
         }
 
         playback_seconds += 1;
