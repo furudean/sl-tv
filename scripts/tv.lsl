@@ -1,6 +1,6 @@
 integer MEDIA_FACE = 3;
 integer CHANNEL = -333;
-string API_BASE_URL = "https://tv-furudean.vercel.app";
+string API_BASE_URL = "https://https://tv.himawari.fun";
 integer INIT_DELAY = -5;
 
 // this is a strided list
