@@ -1,13 +1,13 @@
 <script>
+	import PlayerContainer from '$lib/PlayerContainer.svelte'
+
 	/** @type {import('./$types').PageData} */
 	export let data
 
-	const query = "?autoplay=1" + 
-		(data.timestamp ? `&start=${data.timestamp}` : "")
+	const query = '?autoplay=1' + (data.timestamp ? `&start=${data.timestamp}` : '')
 </script>
 
-<main class="video">
-	<span>waiting for youtube embed...</span>
+<PlayerContainer>
 	<iframe
 		width="560"
 		height="315"
@@ -17,27 +17,9 @@
 		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 		allowfullscreen
 	/>
-</main>
+</PlayerContainer>
 
 <style>
-	.video {
-		position: relative;
-		width: 100vw;
-		height: auto;
-		aspect-ratio: 16 / 9;
-    }
-
-	span {
-		position: absolute;
-		z-index: -1;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		font-size: 2em;
-		text-align: center;
-		opacity: 50%;
-	}
-
 	iframe {
 		display: block;
 		width: 100%;

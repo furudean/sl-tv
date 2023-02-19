@@ -7,6 +7,19 @@ declare global {
 		// interface PageData {}
 		// interface Platform {}
 	}
+
+	// soundcloud widget global
+	// types some day maybe probably not
+	declare const SC: any
+
+	declare interface ResolveResponse {
+		player_url: string
+		source_url: string
+		title: string
+		user: string
+		duration: number
+		requested_by: string
+	}
 }
 
-export {};
+export {}

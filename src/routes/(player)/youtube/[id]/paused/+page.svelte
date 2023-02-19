@@ -19,10 +19,10 @@
 		height: auto;
 		aspect-ratio: 16 / 9;
 		overflow: hidden;
-    }
+	}
 
 	.container::before {
-		content: "";
+		content: '';
 		position: absolute;
 		inset: 0;
 		background: var(--bg);
@@ -32,7 +32,7 @@
 	}
 
 	.container::after {
-		content: "";
+		content: '';
 		position: absolute;
 		inset: 0;
 		background: rgba(0, 0, 0, 0.75);

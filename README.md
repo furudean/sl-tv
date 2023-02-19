@@ -1,18 +1,21 @@
 # sl-tv
 
-sl-tv is an open source video player system for second life. it allows you to play youtube videos in a somewhat synchronized fashion with other users in-world by embedding videos as media.
+sl-tv is an open source video player system for second life. it allows you to
+play youtube & soundcloud videos in a somewhat synchronized fashion with other
+users by embedding players as shared media.
 
 ## system
 
 the system consists of three components;
 
-* web pages that embed content from video providers
-* LSL scripts that provide controls and open said embeds as media in-world
-* helpful APIs for parsing video metadata from provided URLs
+- a web frontend that embeds content from hosts
+- LSL scripts that provide controls and open said embeds as shared media in-world
+- helpful APIs for parsing video metadata from provided URLs
 
 ## developing
 
-in order to run the website and APIs, first install dependencies with `npm install`. 
+in order to run the website and APIs, first install dependencies with
+`npm install`.
 
 start a development server:
 
@@ -31,6 +34,8 @@ to create a production version of web and APIs:
 npm run build
 ```
 
-this spits out a node version of the app, but multiple adapters are supported. check out [kit.svelte.dev/docs/adapters](https://kit.svelte.dev/docs/adapters) for more information.
+this spits out a node version of the app, but multiple adapters are supported.
+check out [kit.svelte.dev/docs/adapters](https://kit.svelte.dev/docs/adapters)
+for more information.
 
 you can preview the production build with `npm run preview`.
