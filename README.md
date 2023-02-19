@@ -9,7 +9,7 @@ users by embedding players as shared media.
 the system consists of three components;
 
 - a web frontend that embeds content from hosts
-- LSL scripts that provide controls and open said embeds as shared media in-world
+- LSL scripts that open & control said embeds as shared media in-world
 - helpful APIs for parsing video metadata from provided URLs
 
 ## developing
