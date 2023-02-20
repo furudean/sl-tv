@@ -203,7 +203,8 @@ default
         string cmd = llList2String(cmds_list, 0); // "a"
         string sub_cmd = llList2String(cmds_list, 1); // "b"
 
-        if (cmd == "skip") {
+        if (cmd == "skip" || cmd == "next") {
+            llSay(0, user_link(from) + " skips");
             next(FALSE);
             return;
         }
