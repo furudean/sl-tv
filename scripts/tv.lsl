@@ -138,6 +138,7 @@ stop() {
     np_title = "";
     np_duration = 0;
     np_requested_by = NULL_KEY;
+    idle_timeout_on_timer = FALSE;
 
     llSetTimerEvent(0.0);
     llClearLinkMedia(LINK_THIS, MEDIA_FACE);
