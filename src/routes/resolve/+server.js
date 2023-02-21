@@ -18,7 +18,7 @@ const response_options = {
 		// second life is fickle when it comes to headers! without this header the response will be
 		// interpereted as ascii instead of utf-8...
 		'Content-Type': 'application/json; charset=utf-8',
-		'Cache-Control': 'public, max-age=86400'
+		'Cache-Control': 'max-age=86400, public'
 	}
 }
 
