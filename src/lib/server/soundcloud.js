@@ -44,6 +44,18 @@ export async function get_soundcloud_response({ query, requested_by }, attempts 
 		client_id = await extract_client_id()
 	}
 
+	// handle shortened urls
+	if (new URL(query).hostname === 'on.soundcloud.com') {
+		const res = await fetch(query, { redirect: 'manual' })
+		const location = res.headers.get('Location')
+
+		if (res.status === 302 && location) {
+			return get_soundcloud_response({ query: location })
+		}
+
+		throw error(500, 'failed to handle redirect for ' + query)
+	}
+
 	const url = `${API_BASE}/resolve?url=${encodeURIComponent(query)}&client_id=${client_id}`
 	const res = await fetch(url)
 
