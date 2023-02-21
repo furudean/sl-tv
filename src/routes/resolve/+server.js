@@ -17,18 +17,19 @@ const response_options = {
 	headers: {
 		// second life is fickle when it comes to headers! without this header the response will be
 		// interpereted as ascii instead of utf-8...
-		'Content-Type': 'application/json; charset=utf-8'
+		'Content-Type': 'application/json; charset=utf-8',
+		'Cache-Control': 'public, max-age=86400'
 	}
 }
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ url }) {
 	const query = url.searchParams.get('q')
-	const requested_by = url.searchParams.get('u')
+	const requested_by = url.searchParams.get('u') ?? undefined
 
 	if (query === null) throw error(400, 'missing parameter q')
-	if (requested_by === null) throw error(400, 'missing parameter u')
 
+	/** @type {string | undefined} */
 	let hostname
 
 	try {
@@ -39,15 +40,22 @@ export async function GET({ url }) {
 
 	const matches_host = host_match(hostname)
 
+	/** @type {ResolveResponse | undefined} */
+	let response
+
 	if (YOUTUBE_DOMAINS.some(matches_host)) {
-		const response = await get_youtube_response({ query, requested_by })
-		return json(response, response_options)
+		response = await get_youtube_response({ query })
 	}
 
 	if (SOUNDCLOUD_DOMAINS.some(matches_host)) {
-		const response = await get_soundcloud_response({ query, requested_by })
-		return json(response, response_options)
+		response = await get_soundcloud_response({ query })
 	}
 
-	throw error(400, 'no supported url found in query')
+	if (response) {
+		response.requested_by = requested_by
+
+		return json(response, response_options)
+	} else {
+		throw error(400, 'no supported url found in query')
+	}
 }

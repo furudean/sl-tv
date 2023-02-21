@@ -8,10 +8,10 @@ const youtube = google.youtube('v3')
 const YOUTUBE_MATCHER = /^.*(youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/
 
 /**
- * @param {{ query: string, requested_by: string }} params
+ * @param {{ query: string }} params
  * @returns {Promise<ResolveResponse>}
  */
-export async function get_youtube_response({ query, requested_by }) {
+export async function get_youtube_response({ query }) {
 	const watch_id = query.match(YOUTUBE_MATCHER)?.[2]
 
 	if (!watch_id) throw error(400, 'invalid youtube url')
@@ -34,7 +34,6 @@ export async function get_youtube_response({ query, requested_by }) {
 		source_url: `https://youtu.be/${watch_id}`,
 		title: item?.snippet?.title ?? 'unknown',
 		user: item?.snippet?.channelTitle ?? 'unknown',
-		duration: iso_8601_to_seconds(item?.contentDetails?.duration || 'P0S'),
-		requested_by
+		duration: iso_8601_to_seconds(item?.contentDetails?.duration || 'P0S')
 	}
 }

@@ -18,7 +18,7 @@ declare global {
 		title: string
 		user: string
 		duration: number
-		requested_by: string
+		requested_by?: string
 	}
 }
 

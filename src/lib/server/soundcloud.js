@@ -36,10 +36,10 @@ async function extract_client_id() {
 }
 
 /**
- * @param {{ query: string, requested_by: string }} params
+ * @param {{ query: string }} params
  * @returns {Promise<ResolveResponse>}
  */
-export async function get_soundcloud_response({ query, requested_by }, attempts = 1) {
+export async function get_soundcloud_response({ query }, attempts = 1) {
 	if (!client_id) {
 		client_id = await extract_client_id()
 	}
@@ -64,7 +64,7 @@ export async function get_soundcloud_response({ query, requested_by }, attempts 
 		if (attempts > 3) throw error(503, 'failed to contact soundcloud api :(')
 
 		client_id = undefined
-		return get_soundcloud_response({ query, requested_by }, attempts + 1)
+		return get_soundcloud_response({ query }, attempts + 1)
 	}
 
 	const data = await res.json()
@@ -79,8 +79,7 @@ export async function get_soundcloud_response({ query, requested_by }, attempts 
 		source_url: data.permalink_url,
 		title: data.title,
 		user: data.user.username,
-		duration: Math.floor(data.full_duration / 1000),
-		requested_by
+		duration: Math.floor(data.full_duration / 1000)
 	}
 
 	return response
