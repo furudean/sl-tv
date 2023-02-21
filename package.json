@@ -23,6 +23,6 @@
 	"type": "module",
 	"dependencies": {
 		"googleapis": "^110.0.0",
-		"iso8601-duration": "^2.1.1"
+		"temporal-polyfill": "^0.1.1"
 	}
 }

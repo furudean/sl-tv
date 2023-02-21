@@ -1,5 +1,5 @@
 import { GOOGLE_CLOUD_API_KEY } from '$env/static/private'
-import { iso_8601_to_seconds } from '$lib/date'
+import { duration_to_seconds } from '$lib/date'
 import { error } from '@sveltejs/kit'
 import { google } from 'googleapis'
 
@@ -34,6 +34,6 @@ export async function get_youtube_response({ query }) {
 		source_url: `https://youtu.be/${watch_id}`,
 		title: item?.snippet?.title ?? 'unknown',
 		user: item?.snippet?.channelTitle ?? 'unknown',
-		duration: iso_8601_to_seconds(item?.contentDetails?.duration || 'P0S')
+		duration: duration_to_seconds(item?.contentDetails?.duration || 'P0S')
 	}
 }

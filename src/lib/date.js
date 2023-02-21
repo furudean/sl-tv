@@ -1,9 +1,9 @@
-import { parse, toSeconds } from "iso8601-duration";
+import { Temporal } from 'temporal-polyfill'
 
-/** 
- * @param {string} date 
+/**
+ * @param {string} duration
  * @returns {number}
  */
-export function iso_8601_to_seconds(date) {
-    return toSeconds(parse(date))
+export function duration_to_seconds(duration) {
+	return Temporal.Duration.from(duration).seconds
 }
