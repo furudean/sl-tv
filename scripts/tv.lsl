@@ -1,11 +1,12 @@
 integer MEDIA_FACE = 3;
 integer CHANNEL = -333;
-string API_BASE_URL = "https://https://tv.himawari.fun";
+string API_BASE_URL = "https://tv.himawari.fun";
 integer INIT_DELAY = -5;
 
 // this is a strided list
 // [string player_url, string source_url, string title, integer duration, key requested_by, ...]
 list queue = [];
+integer QUEUE_STRIDE = 4;
 
 integer is_playing = FALSE;
 integer playback_seconds = 0;
@@ -98,7 +99,7 @@ set_texture(string texture) {
 next(integer first) {
     if (llGetListLength(queue) == 0) {
         llSay(0, "reached end of queue");
-        set_idle_timeout(30.0);
+        set_idle_timeout(60.0);
 
         return;
     }
@@ -115,7 +116,7 @@ next(integer first) {
     np_requested_by = llList2Key(queue, 4);
 
     // pop the queue
-    queue = llDeleteSubList(queue, 0, 4);
+    queue = llDeleteSubList(queue, 0, QUEUE_STRIDE);
 
     set_media(API_BASE_URL + np_player_url);
     set_texture("on");
@@ -296,7 +297,16 @@ default
             // starting from stopped state, start immediately
             next(TRUE);
         } else {
-            llSay(0, user_link(requested_by) + " added \"" + title + "\" to queue");
+            integer position = llGetListLength(queue) / (QUEUE_STRIDE + 1) - 1;
+            string say = user_link(requested_by) + " added \"" + title + "\" to queue";
+
+            if (position > 0) {
+                say += " (" + (string)position + " behind)";
+            } else {
+                say += " (up next)";
+            }
+
+            llSay(0, say);
         }
     }
 
