@@ -20,7 +20,7 @@ async function extract_client_id() {
 	const homepage = await fetch('https://soundcloud.com').then((response) => response.text())
 
 	// get the urls of all script tags on the page
-	const script_urls = [...homepage.matchAll(SCRIPT_TAG_SRC)].map((match) => match[1])
+	const script_urls = [...homepage.matchAll(SCRIPT_TAG_SRC)].map((match) => match[1]).reverse()
 
 	for (const url of script_urls) {
 		// download script
