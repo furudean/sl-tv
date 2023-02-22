@@ -83,7 +83,12 @@
 				<span class="remaining">
 					-{fmt_duration(duration - current_time)}
 				</span>
-				<progress value={Math.floor(current_time)} max={Math.floor(duration)} />
+				<div class="progress-bar">
+					<div
+						class="progress-inner"
+						style:--width="{Math.floor((current_time / duration) * 100)}%"
+					/>
+				</div>
 			</div>
 		</div>
 	</button>
@@ -145,8 +150,7 @@
 		float: right;
 	}
 
-	progress {
-		all: unset;
+	.progress-bar {
 		display: block;
 		width: 100%;
 		height: 4px;
@@ -154,13 +158,9 @@
 		margin-top: 0.5em;
 	}
 
-	::-webkit-progress-bar {
-		background: currentColor;
-	}
-	::-webkit-progress-value {
-		background: currentColor;
-	}
-	::-moz-progress-bar {
+	.progress-inner {
+		height: 100%;
+		width: var(--width);
 		background: currentColor;
 	}
 </style>
