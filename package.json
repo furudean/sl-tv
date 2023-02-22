@@ -23,6 +23,8 @@
 	"type": "module",
 	"dependencies": {
 		"googleapis": "^110.0.0",
+		"html-entities": "^2.3.3",
+		"probe-image-size": "^7.2.3",
 		"temporal-polyfill": "^0.1.1"
 	}
 }

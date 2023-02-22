@@ -1,9 +1,11 @@
+import { get_bandcamp_response } from '$lib/server/bandcamp'
 import { get_soundcloud_response } from '$lib/server/soundcloud'
 import { get_youtube_response } from '$lib/server/youtube'
 import { error, json } from '@sveltejs/kit'
 
 const YOUTUBE_DOMAINS = ['youtube.com', 'youtu.be']
 const SOUNDCLOUD_DOMAINS = ['soundcloud.com']
+const BANDCAMP_DOMAINS = ['bandcamp.com']
 
 /**
  * @param {string} hostname
@@ -49,6 +51,10 @@ export async function GET({ url }) {
 
 	if (SOUNDCLOUD_DOMAINS.some(matches_host)) {
 		response = await get_soundcloud_response({ query })
+	}
+
+	if (BANDCAMP_DOMAINS.some(matches_host)) {
+		response = await get_bandcamp_response({ query })
 	}
 
 	if (response) {
