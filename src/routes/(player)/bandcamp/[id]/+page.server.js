@@ -1,6 +1,7 @@
 import { error } from '@sveltejs/kit'
 import { decode as decode_html_entities } from 'html-entities'
-import probe from 'probe-image-size'
+import image_dimensions from 'buffer-image-size'
+import { getAverageColor } from 'fast-average-color-node'
 
 /**
  * @param {string} track_id
@@ -29,17 +30,26 @@ export async function load({ params, url, fetch }) {
 	const data = await fetch_player_data(params.id, fetch)
 	const track = data.tracks[0]
 
-	const album_art = await probe(data.album_art_lg)
-
 	if (!track.track_streaming) throw error(403, 'track does not support streaming')
+
+	const response = await fetch(data.album_art_lg)
+	const buffer = Buffer.from(await response.arrayBuffer())
+
+	const average_color = await getAverageColor(buffer)
+	const cover_dimensions = image_dimensions(buffer)
 
 	return {
 		timestamp: t ? Number(t) : undefined,
 		album_title: data.album_title,
-		album_art,
+		cover_art: {
+			url: data.album_art_lg,
+			height: cover_dimensions.height,
+			width: cover_dimensions.width
+		},
 		track: track.file,
 		track_artist: track.artist,
 		track_title: track.title,
-		track_duration: track.duration
+		track_duration: track.duration,
+		theme_color: average_color.hex
 	}
 }

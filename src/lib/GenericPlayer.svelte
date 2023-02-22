@@ -1,6 +1,7 @@
 <script>
 	import { fmt_duration } from '$lib/date'
 	import { onMount, onDestroy } from 'svelte'
+	import tinycolor from 'tinycolor2'
 
 	/** @type {string} */
 	export let src
@@ -19,6 +20,9 @@
 
 	/** @type {number} */
 	export let start = 0
+
+	/** @type {string} */
+	export let theme_color
 
 	let is_playing = false
 	let current_time = start
@@ -49,10 +53,11 @@
 		audio_element.currentTime = current_time
 		audio_element.play()
 	})
-
 	onDestroy(() => {
 		clearInterval(interval)
 	})
+
+	$: text_color_class = tinycolor(theme_color)?.isLight() ? 'text-dark' : 'text-light'
 </script>
 
 <audio
@@ -64,8 +69,8 @@
 	bind:this={audio_element}
 />
 
-<div class="container">
-	<button class="player" on:click={toggle_play}>
+<div class="container {text_color_class}" style:--background={theme_color}>
+	<button class="player" class:paused={!is_playing} on:click={toggle_play}>
 		<div class="cover-art">
 			<img src={cover.url} alt="Cover art" height={cover.height} width={cover.width} />
 		</div>
@@ -101,10 +106,15 @@
 		height: 100%;
 		width: 100%;
 		position: relative;
-		background: black;
+		background: var(--background);
 		padding: 0 4em;
 		display: grid;
 		place-items: center center;
+		color: black;
+	}
+
+	.container.text-light {
+		color: white;
 	}
 
 	.player {
@@ -114,6 +124,12 @@
 		width: 100%;
 		max-height: auto;
 		gap: 3em;
+		transform: scale(1);
+		transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.player.paused {
+		transform: scale(0.9);
 	}
 
 	.cover-art {
@@ -154,8 +170,16 @@
 		display: block;
 		width: 100%;
 		height: 4px;
-		background: grey;
 		margin-top: 0.5em;
+		position: relative;
+	}
+
+	.progress-bar::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: currentColor;
+		opacity: 0.5;
 	}
 
 	.progress-inner {

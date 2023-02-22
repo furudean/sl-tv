@@ -4,6 +4,8 @@
 
 	/** @type {import('./$types').PageData} */
 	export let data
+
+	console.log(data)
 </script>
 
 <PlayerContainer>
@@ -11,7 +13,8 @@
 		src={data.track['mp3-128']}
 		title={data.track_title}
 		artist={data.track_artist}
-		cover={data.album_art}
+		cover={data.cover_art}
+		theme_color={data.theme_color}
 		start={data.timestamp}
 		duration={data.track_duration}
 	/>
