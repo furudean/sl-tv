@@ -117,6 +117,15 @@
 		color: white;
 	}
 
+	.container::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		opacity: 0.2;
+		z-index: 0;
+		background: black;
+	}
+
 	.player {
 		all: unset;
 		display: flex;
