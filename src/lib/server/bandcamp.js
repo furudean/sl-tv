@@ -24,13 +24,10 @@ async function get_track_details(url) {
 export async function get_bandcamp_response({ query }) {
 	const track = await get_track_details(query)
 
-	console.log(track)
-
 	const track_id = track.additionalProperty.find(
 		(/** @type {{ name: string; }} */ prop) => prop.name === 'track_id'
 	).value
 
-	console.log(track.duration)
 	// track.duration is someting like P00H04M02S, missing the 'T'
 	const fixed_duration = 'PT' + track.duration.slice(1)
 
