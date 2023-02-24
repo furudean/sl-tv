@@ -297,11 +297,11 @@ default
             // starting from stopped state, start immediately
             next(TRUE);
         } else {
-            integer position = llGetListLength(queue) / (QUEUE_STRIDE + 1) - 1;
+            integer position = llGetListLength(queue) / (QUEUE_STRIDE + 1);
             string say = user_link(requested_by) + " added \"" + title + "\" to queue";
 
-            if (position > 0) {
-                say += " (" + (string)position + " behind)";
+            if (position > 1) {
+                say += " (" + (string)position + " ahead)";
             } else {
                 say += " (up next)";
             }
