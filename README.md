@@ -2,7 +2,7 @@
 
 sl-tv is an open source video player system for second life. it allows you to
 play youtube & soundcloud videos in a somewhat synchronized fashion with other
-users by embedding players as shared media.
+users, by embedding web content as second life shared media.
 
 ## system
 
