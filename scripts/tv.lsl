@@ -296,8 +296,8 @@ default
         // queue is a strided list
         queue += [player_url, source_url, title, duration, requested_by];
 
-        if (np_player_url == "") {
-            // starting from stopped state, start immediately
+        if (np_player_url == "" || idle_timeout_on_timer) {
+            // starting from stopped state, or at end of queue
             next(TRUE);
         } else {
             integer position = (llGetListLength(queue) / (QUEUE_STRIDE + 1)) - 1;
