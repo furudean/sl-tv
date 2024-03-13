@@ -1,7 +1,7 @@
 integer MEDIA_FACE = 3;
 integer CHANNEL = -333;
 string API_BASE_URL = "https://tv.himawari.fun";
-integer INIT_DELAY = -5;
+integer INIT_DELAY = -10;
 
 // this is a strided list
 // [string player_url, string source_url, string title, integer duration, key requested_by, ...]
@@ -123,6 +123,7 @@ next(integer first) {
 
     if (first) {
         llSay(0, "▶ " + user_link(np_requested_by) + " started playing️ \"" + np_title + "\" (" + np_source_url + ")");
+        llSay(0, "press the screen to join in!");
         playback_seconds = INIT_DELAY;
     } else {
         llSay(0, "▶ " + np_title + " (" + np_source_url + ")");
@@ -276,11 +277,13 @@ default
     http_response(key request_id, integer status, list metadata, string body) {
         if (status >= 500) { 
             llSay(0, "<!> could not connect to resolve server :-(");
+            llSay(0, body);
             return; 
         }
 
         if (status >= 400) { 
             llSay(0, "<!> could not resolve");
+            llSay(0, body);
             return;
         }
 
