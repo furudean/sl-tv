@@ -276,13 +276,13 @@ default
     // handle meta data web server response
     http_response(key request_id, integer status, list metadata, string body) {
         if (status >= 500) { 
-            llSay(0, "<!> could not connect to resolve server :-(");
+            llSay(0, "⚠️ could not connect to resolve server :-(");
             llSay(0, body);
             return; 
         }
 
         if (status >= 400) { 
-            llSay(0, "<!> could not resolve");
+            llSay(0, "⚠️ could not resolve");
             llSay(0, body);
             return;
         }
