@@ -99,7 +99,7 @@ set_texture(string texture) {
 next(integer first) {
     if (llGetListLength(queue) == 0) {
         llSay(0, "reached end of queue");
-        set_idle_timeout(60.0);
+        set_idle_timeout(90.0);
 
         return;
     }
