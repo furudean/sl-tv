@@ -53,7 +53,7 @@
 
 	<dl>
 		<dt><code>&lt;url&gt;</code></dt>
-		<dd>play media from a url.</dd>
+		<dd>play media from a url</dd>
 		<dd>example: <code>/-1312 https://youtu.be/tN-C8-YZy24</code></dd>
 
 		<dt><code>playskip &lt;url&gt;</code></dt>
@@ -72,10 +72,10 @@
 		<dd>resume the current playback</dd>
 
 		<dt><code>stop</code></dt>
-		<dd>stop the current playback</dd>
+		<dd>end the current session. this ejects any queued items.</dd>
 
 		<dt><code>seek &lt;time&gt;</code></dt>
-		<dd>seek the current playback to a time.</dd>
+		<dd>seek the current playback to a timestamp</dd>
 		<dd>example: <code>/-1312 seek 1:30</code></dd>
 
 		<dt><code>skip</code></dt>
