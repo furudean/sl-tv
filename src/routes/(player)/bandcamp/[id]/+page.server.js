@@ -35,8 +35,10 @@ export async function load({ params, url, fetch }) {
 	let theme_color = '#ffffff'
 	let cover_dimensions = { height: 0, width: 0 }
 
+	const album_art = track.art_lg ?? data?.album_art_lg
+
 	try {
-		const response = await fetch(data.album_art_lg)
+		const response = await fetch(album_art)
 		const buffer = Buffer.from(await response.arrayBuffer())
 		cover_dimensions = image_dimensions(buffer)
 		const average_color = await getAverageColor(buffer)
@@ -49,7 +51,7 @@ export async function load({ params, url, fetch }) {
 		timestamp: t ? Number(t) : undefined,
 		album_title: data.album_title,
 		cover_art: {
-			url: data.album_art_lg,
+			url: album_art,
 			height: cover_dimensions.height,
 			width: cover_dimensions.width
 		},
