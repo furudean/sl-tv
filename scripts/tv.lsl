@@ -379,7 +379,8 @@ default
         }
 
         if (cmd == "about" || cmd == "info" || cmd == "help") {
-            llRegionSayTo(from, 0, "sl-tv by malaises/furudean v" + VERSION + " - https://tv.himawari.fun");
+            key meri = "1dc341e7-6fa8-402f-a981-e9465e030458";
+            llRegionSayTo(from, 0, "sl-tv v" + VERSION + " by " + user_link(meri) + " - https://tv.himawari.fun");
             return;
         }
 
@@ -407,7 +408,6 @@ default
 
         if (play_skip == TRUE) {
             queue = [player_url, source_url, title, duration, requested_by] + queue;
-            llSay(0, user_link(requested_by) + " play skips");
             next(TRUE);
             return;
         }
