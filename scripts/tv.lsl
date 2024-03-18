@@ -12,6 +12,7 @@
 
 // CONFIGURATION - change these to suit your needs
 
+integer PERMISSIONS = 0; // 0 = anyone, 1 = friends, 2 = group, 3 = owner
 integer MEDIA_FACE = 3; // the face we're using for media. this is usually the front face
 integer LISTEN_CHANNEL = -1312; // the channel the TV will listen to commands from
 string API_BASE_URL = "https://tv.himawari.fun"; // leave this as is, unless you're running your own server
@@ -273,6 +274,21 @@ default
         list cmds_list = llParseString2List(msg, [" "], []); // ["a", "b", ...]
         string cmd = llList2String(cmds_list, 0); // "a"
         string sub_cmd = llList2String(cmds_list, 1); // "b"
+
+        if (PERMISSIONS == 1 && llIsFriend(from)) {
+            llRegionSayTo(from, 0, "you need to be friends with the owner to do that");
+            return;
+        }
+
+        if (PERMISSIONS == 2 && llSameGroup(from)) {
+            llRegionSayTo(from, 0, "you need to share the owner's selected group to use this");
+            return;
+        }
+
+        if (PERMISSIONS == 3 && from != llGetOwner()) {
+            llRegionSayTo(from, 0, "only the owner can do that");
+            return;
+        }
 
         if (cmd == "skip" || cmd == "next") {
             llSay(0, user_link(from) + " skips");
