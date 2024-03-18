@@ -407,8 +407,8 @@ default
 
         if (play_skip == TRUE) {
             queue = [player_url, source_url, title, duration, requested_by] + queue;
-            llSay(0, user_link(requested_by) + " plays \"" + title + "\" (play skip)");
-            next(FALSE);
+            llSay(0, user_link(requested_by) + " play skips");
+            next(TRUE);
             return;
         }
 

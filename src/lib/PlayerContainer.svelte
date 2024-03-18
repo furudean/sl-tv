@@ -1,5 +1,5 @@
 <div class="container">
-	<span>waiting for player...</span>
+	<span>(waiting for player...)</span>
 	<slot />
 </div>
 
