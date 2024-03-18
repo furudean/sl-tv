@@ -431,7 +431,7 @@ default
         // queue is a strided list
         queue += [player_url, source_url, title, duration, requested_by];
 
-        if (np_player_url == "" || idle_timeout_on_timer) {
+        if ((np_player_url == "" || idle_timeout_on_timer) && is_playing == FALSE) {
             // starting from stopped state, or at end of queue
             next(TRUE);
         } else {
