@@ -57,7 +57,7 @@
 		<dd>example: <code>/-1312 https://youtu.be/tN-C8-YZy24</code></dd>
 
 		<dt><code>playskip &lt;url&gt;</code></dt>
-		<dd>play media from a url, and skip the current playback.</dd>
+		<dd>play media from a url immediately, skipping the line</dd>
 		<dd>
 			example: <code>/-1312 playskip https://youtu.be/tN-C8-YZy24</code>
 		</dd>
