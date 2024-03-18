@@ -1,5 +1,5 @@
 import { duration_to_seconds } from '$lib/date'
-import { error } from '@sveltejs/kit'
+import { text } from '@sveltejs/kit'
 
 /** @param {string} url */
 async function get_track_details(url) {
@@ -14,15 +14,20 @@ async function get_track_details(url) {
 		return JSON.parse(match)
 	}
 
-	throw error(500, 'failed to parse track details')
+	throw new Error('failed to parse track details')
 }
 
 /**
  * @param {{ query: string }} params
- * @returns {Promise<ResolveResponse>}
+ * @returns {Promise<ResolveResponse | Response>}
  */
 export async function get_bandcamp_response({ query }) {
-	const track = await get_track_details(query)
+	let track
+	try {
+		track = await get_track_details(query)
+	} catch (e) {
+		return text('failed to fetch bandcamp track details', { status: 500 })
+	}
 
 	const track_id = track.additionalProperty.find(
 		(/** @type {{ name: string; }} */ prop) => prop.name === 'track_id'

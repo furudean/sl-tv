@@ -1,4 +1,4 @@
-import { error } from '@sveltejs/kit'
+import { text } from '@sveltejs/kit'
 
 const API_BASE = 'https://api-v2.soundcloud.com'
 
@@ -37,7 +37,7 @@ async function extract_client_id() {
 
 /**
  * @param {{ query: string }} params
- * @returns {Promise<ResolveResponse>}
+ * @returns {Promise<ResolveResponse | Response>}
  */
 export async function get_soundcloud_response({ query }, attempts = 1) {
 	if (!client_id) {
@@ -53,7 +53,7 @@ export async function get_soundcloud_response({ query }, attempts = 1) {
 			return get_soundcloud_response({ query: location })
 		}
 
-		throw error(500, 'failed to handle redirect for ' + query)
+		return text('failed to handle redirect for ' + query, { status: 500 })
 	}
 
 	const url = `${API_BASE}/resolve?url=${encodeURIComponent(query)}&client_id=${client_id}`
@@ -61,7 +61,7 @@ export async function get_soundcloud_response({ query }, attempts = 1) {
 
 	if (res.status !== 200) {
 		console.log('failed to query soundcloud api', res)
-		if (attempts > 3) throw error(503, 'failed to contact soundcloud api :(')
+		if (attempts > 3) return text('failed to contact soundcloud api', { status: 500 })
 
 		client_id = undefined
 		return get_soundcloud_response({ query }, attempts + 1)
@@ -69,8 +69,9 @@ export async function get_soundcloud_response({ query }, attempts = 1) {
 
 	const data = await res.json()
 
-	if (!data.uri) throw error(404, 'track not found')
-	if (!data.streamable) throw error(400, 'url can not be streamed due to uploader restriction')
+	if (!data.uri) return text('track not found', { status: 404 })
+	if (!data.streamable)
+		return text('url can not be streamed due to uploader restriction', { status: 403 })
 
 	const id = data.urn.split(':')[2]
 

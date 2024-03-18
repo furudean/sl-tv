@@ -1,11 +1,13 @@
 import { get_bandcamp_response } from '$lib/server/bandcamp'
 import { get_soundcloud_response } from '$lib/server/soundcloud'
 import { get_youtube_response } from '$lib/server/youtube'
-import { error, json, text } from '@sveltejs/kit'
+import { json, text } from '@sveltejs/kit'
 
 const YOUTUBE_DOMAINS = ['youtube.com', 'youtu.be']
 const SOUNDCLOUD_DOMAINS = ['soundcloud.com']
 const BANDCAMP_DOMAINS = ['bandcamp.com']
+
+const ALL_DOMAINS = [...YOUTUBE_DOMAINS, ...SOUNDCLOUD_DOMAINS, ...BANDCAMP_DOMAINS]
 
 /**
  * @param {string} hostname
@@ -37,12 +39,12 @@ export async function GET({ url }) {
 	try {
 		hostname = new URL(query).hostname
 	} catch {
-		return text('invalid url in query', { status: 400 })
+		return text(`not a valid url: ${query}`, { status: 400 })
 	}
 
 	const matches_host = host_match(hostname)
 
-	/** @type {ResolveResponse | undefined} */
+	/** @type {ResolveResponse | Response | undefined} */
 	let response
 
 	if (YOUTUBE_DOMAINS.some(matches_host)) {
@@ -57,11 +59,17 @@ export async function GET({ url }) {
 		response = await get_bandcamp_response({ query })
 	}
 
+	if (response instanceof Response) {
+		return response
+	}
+
 	if (response) {
 		response.requested_by = requested_by
 
 		return json(response, response_options)
 	} else {
-		return text('no supported url found in query', { status: 400 })
+		return text(`host ${hostname} is not supported. must be one of [${ALL_DOMAINS.join(', ')}]`, {
+			status: 400
+		})
 	}
 }
