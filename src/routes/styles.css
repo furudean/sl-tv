@@ -12,16 +12,25 @@ body {
 
 a {
 	color: inherit;
+	text-decoration: underline;
 }
 
 figure {
 	margin: 0;
 	margin-top: 2rem;
+	display: flex;
+	flex-direction: column;
+}
+
+figure > img {
+	margin: 0 auto;
 }
 
 figcaption {
 	margin-top: 1rem;
 	margin-bottom: 0;
+	font-style: italic;
+	text-align: center;
 }
 
 .prose {
@@ -33,9 +42,9 @@ figcaption {
 .prose :not(pre) code {
 	font-family: Courier, monospace;
 	font-size: 0.9em;
-	border: 1px solid currentColor;
+	background: #333;
 	border-radius: 0.25em;
-	padding: 0 0.25em;
+	padding: 0.05em 0.25em;
 }
 
 h1,
@@ -77,4 +86,15 @@ pre {
 	background: #333;
 	padding: 1rem;
 	overflow-x: auto;
+}
+
+pre {
+	font-size: 0.8rem;
+}
+
+summary.h2 {
+	font-size: 1.625rem;
+	line-height: 1;
+	font-weight: bold;
+	margin-top: 4rem;
 }

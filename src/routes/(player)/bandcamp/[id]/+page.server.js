@@ -32,11 +32,18 @@ export async function load({ params, url, fetch }) {
 
 	if (!track.track_streaming) throw error(403, 'track does not support streaming')
 
-	const response = await fetch(data.album_art_lg)
-	const buffer = Buffer.from(await response.arrayBuffer())
+	let theme_color = '#ffffff'
+	let cover_dimensions = { height: 0, width: 0 }
 
-	const average_color = await getAverageColor(buffer)
-	const cover_dimensions = image_dimensions(buffer)
+	try {
+		const response = await fetch(data.album_art_lg)
+		const buffer = Buffer.from(await response.arrayBuffer())
+		cover_dimensions = image_dimensions(buffer)
+		const average_color = await getAverageColor(buffer)
+		theme_color = average_color.hex
+	} catch (e) {
+		console.error('failed to get cover art color or dimensions', e)
+	}
 
 	return {
 		timestamp: t ? Number(t) : undefined,
@@ -50,6 +57,6 @@ export async function load({ params, url, fetch }) {
 		track_artist: track.artist,
 		track_title: track.title,
 		track_duration: track.duration,
-		theme_color: average_color.hex
+		theme_color: theme_color
 	}
 }

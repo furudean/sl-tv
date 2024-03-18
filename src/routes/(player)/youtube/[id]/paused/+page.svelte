@@ -7,8 +7,8 @@
 
 <main class="container" style:--bg={background}>
 	<div class="prose">
-		<h1>(paused)</h1>
-		<p class="shy">resume with <code>resume</code> command</p>
+		<h1>(media paused)</h1>
+		<p class="shy">play with <code>resume</code> command</p>
 	</div>
 </main>
 

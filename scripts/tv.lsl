@@ -127,7 +127,7 @@ say_list(key from, list items, string list_name) {
     }
 
     integer total = llGetListLength(items) / LIST_STRIDE;
-    string say = "\n" + list_name + "\n";
+    string say = "\n" + list_name;
 
     integer i;
     for (i = 0; i < total; i++) {
