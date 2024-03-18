@@ -379,7 +379,7 @@ default
         }
 
         if (cmd == "about" || cmd == "info" || cmd == "help") {
-            llRegionSayTo(from, 0, "sl-tv by malaises/furudean - https://tv.himawari.fun");
+            llRegionSayTo(from, 0, "sl-tv by malaises/furudean v" + VERSION + " - https://tv.himawari.fun");
             return;
         }
 
@@ -403,7 +403,7 @@ default
         string title = llJsonGetValue(body, ["title"]);
         integer duration = (integer)llJsonGetValue(body, ["duration"]);
         key requested_by = (key)llJsonGetValue(body, ["requested_by"]);
-        string play_skip = (integer)llJsonGetValue(body, ["play_skip"]);
+        integer play_skip = (integer)llJsonGetValue(body, ["play_skip"]);
 
         if (play_skip == TRUE) {
             queue = [player_url, source_url, title, duration, requested_by] + queue;
