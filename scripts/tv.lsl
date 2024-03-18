@@ -388,7 +388,7 @@ default
             return;
         }
 
-        resolve(cmd, from, 0)
+        resolve(cmd, from, 0);
     }
 
     // handle meta data web server response
@@ -403,9 +403,8 @@ default
         string title = llJsonGetValue(body, ["title"]);
         integer duration = (integer)llJsonGetValue(body, ["duration"]);
         key requested_by = (key)llJsonGetValue(body, ["requested_by"]);
-        integer play_skip = (integer)llJsonGetValue(body, ["play_skip"]);
+        string play_skip = (integer)llJsonGetValue(body, ["play_skip"]);
 
-        // queue is a strided list
         if (play_skip == TRUE) {
             queue = [player_url, source_url, title, duration, requested_by] + queue;
             llSay(0, user_link(requested_by) + " plays \"" + title + "\" (play skip)");
@@ -413,8 +412,8 @@ default
             return;
         }
 
+        // queue is a strided list
         queue += [player_url, source_url, title, duration, requested_by];
-
 
         if (np_player_url == "" || idle_timeout_on_timer) {
             // starting from stopped state, or at end of queue

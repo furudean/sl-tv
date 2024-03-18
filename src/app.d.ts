@@ -19,7 +19,7 @@ declare global {
 		user: string
 		duration: number
 		requested_by?: string
-		play_skip: boolean
+		play_skip: number
 	}
 }
 

@@ -66,7 +66,7 @@ export async function GET({ url }) {
 
 	if (response) {
 		response.requested_by = requested_by
-		response.play_skip = is_play_skip
+		response.play_skip = is_play_skip ? 1 : 0
 
 		return json(response, response_options)
 	} else {
