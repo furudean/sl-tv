@@ -24,7 +24,7 @@ export async function get_youtube_response({ query }) {
 	})
 
 	if (data.pageInfo?.totalResults !== 1) {
-		return text('video not found', { status: 404 })
+		return text('youtube video not found, url invalid or video restricted', { status: 404 })
 	}
 
 	const item = data.items?.[0]

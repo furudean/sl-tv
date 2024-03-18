@@ -70,8 +70,7 @@ export async function get_soundcloud_response({ query }, attempts = 1) {
 	const data = await res.json()
 
 	if (!data.uri) return text('track not found', { status: 404 })
-	if (!data.streamable)
-		return text('url can not be streamed due to uploader restriction', { status: 403 })
+	if (!data.streamable) return text('url can not be streamed', { status: 403 })
 
 	const id = data.urn.split(':')[2]
 
