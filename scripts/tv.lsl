@@ -1,12 +1,31 @@
-integer MEDIA_FACE = 3;
-integer CHANNEL = -333;
-string API_BASE_URL = "https://tv.himawari.fun";
-integer INIT_DELAY = -10;
+// sl-tv - audio/video streaming player system for second life
+//
+// this script is meant to be placed in a prim that will act as a TV screen.
+// read the manual at https://tv.himawari.fun for more information on how to use
+// this script.
+//
+// redistribute or whatever. public domain desu
+//
+// https://tv.himawari.fun
+// https://github.com/furudean/sl-tv
+//
+
+// CONFIGURATION - change these to suit your needs
+
+integer MEDIA_FACE = 3; // the face we're using for media. this is usually the front face
+integer LISTEN_CHANNEL = -1312; // the channel the TV will listen to commands from
+string API_BASE_URL = "https://tv.himawari.fun"; // leave this as is, unless you're running your own server
+integer INIT_DELAY = -10; // how many seconds to wait on first play before moving to next track
+integer HISTORY_MAX = 25; // how many tracks to keep in history
+float IDLE_TIMEOUT = 90.0; // how many seconds to wait on queue end before ending media
+
+// END CONFIGURATION
 
 // this is a strided list
 // [string player_url, string source_url, string title, integer duration, key requested_by, ...]
 list queue = [];
-integer QUEUE_STRIDE = 4;
+list history = []; // same as queue
+integer LIST_STRIDE = 5;
 
 integer is_playing = FALSE;
 integer playback_seconds = 0;
@@ -18,6 +37,10 @@ string np_source_url;
 string np_title;
 integer np_duration;
 key np_requested_by;
+
+string hyperlink(string text, string url) {
+    return "[" + url + " " + text + "]";
+}
 
 string user_link(key uuid) {
     return "secondlife:///app/agent/" + (string)uuid + "/about";
@@ -59,7 +82,7 @@ integer parse_timestamp(string timestamp) {
     if (mm_o > -1) minutes = llList2Integer(hh_mm_ss, mm_o);
     if (ss_o > -1) seconds = llList2Integer(hh_mm_ss, ss_o);
 
-    return (seconds) + (minutes * 60) + (hours * 60 * 60);   
+    return (seconds) + (minutes * 60) + (hours * 60 * 60);
 }
 
 set_media(string url) {
@@ -96,10 +119,46 @@ set_texture(string texture) {
     llSetLinkPrimitiveParamsFast(LINK_THIS, params);
 }
 
+// helper function to display playback history or queue
+say_list(key from, list items, string list_name) {
+    if (llGetListLength(items) == 0) {
+        llRegionSayTo(from, 0, list_name + " is empty");
+        return;
+    }
+
+    integer total = llGetListLength(items) / LIST_STRIDE;
+    string say = "\n" + list_name + "\n";
+
+    integer i;
+    for (i = 0; i < total; i++) {
+        integer offset = i * LIST_STRIDE;
+        string source_url = llList2String(items, offset + 1);
+        string title = llList2String(items, offset + 2);
+        integer duration = llList2Integer(items, offset + 3);
+        key requested_by = llList2Key(items, offset + 4);
+
+        say += "\n" + (string)(i + 1) + ". " + hyperlink(title, source_url) + " (" + fmt_timestamp(duration) + ") - added by " + user_link(requested_by);
+    }
+
+    llRegionSayTo(from, 0, say);
+}
+
+push_history() {
+    if (llGetListLength(history) / LIST_STRIDE >= HISTORY_MAX) {
+        history = llDeleteSubList(history, 0, LIST_STRIDE - 1);
+    }
+
+    history += [np_player_url, np_source_url, np_title, np_duration, np_requested_by];
+}
+
 next(integer first) {
+    if (np_player_url != "") {
+        push_history();
+    }
+
     if (llGetListLength(queue) == 0) {
         llSay(0, "reached end of queue");
-        set_idle_timeout(90.0);
+        set_idle_timeout(IDLE_TIMEOUT);
 
         return;
     }
@@ -116,17 +175,16 @@ next(integer first) {
     np_requested_by = llList2Key(queue, 4);
 
     // pop the queue
-    queue = llDeleteSubList(queue, 0, QUEUE_STRIDE);
+    queue = llDeleteSubList(queue, 0, LIST_STRIDE - 1);
 
     set_media(API_BASE_URL + np_player_url);
     set_texture("on");
 
     if (first) {
-        llSay(0, "▶ " + user_link(np_requested_by) + " started playing️ \"" + np_title + "\" (" + np_source_url + ")");
-        llSay(0, "press the screen to join in!");
+        llSay(0, "▶ " + user_link(np_requested_by) + " started playing️ \"" + hyperlink(np_title, np_source_url) + "\" (" + fmt_timestamp(np_duration) + ") ");
         playback_seconds = INIT_DELAY;
     } else {
-        llSay(0, "▶ " + np_title + " (" + np_source_url + ")");
+        llSay(0, "▶ now playing " + hyperlink(np_title, np_source_url) + " (" + fmt_timestamp(np_duration) + ") ");
     }
 
     llSetTimerEvent(1.0);
@@ -188,27 +246,30 @@ default
 {
     on_rez(integer start_param)
     {
-        llResetScript(); 
+        llResetScript();
     }
 
     state_entry() {
         stop();
-        llListen(CHANNEL, "", NULL_KEY, "");
+        llListen(LISTEN_CHANNEL, "", NULL_KEY, "");
+        llSay(0, "tv is listening on channel " + (string)LISTEN_CHANNEL);
     }
 
     // handle incoming commands
-    listen(integer chan, string name, key id, string msg) {
-        list parsed_message = llParseString2List(msg, [","], []); // ["user", "a b"]
-        key from = (key)llList2String(parsed_message, 0); // "user"
-        string cmds = llList2String(parsed_message, 1); // "a b"
-
-        list cmds_list = llParseString2List(cmds, [" "], []); // ["a", "b"]
+    listen(integer channel, string name, key from, string msg) {
+        list cmds_list = llParseString2List(msg, [" "], []); // ["a", "b", ...]
         string cmd = llList2String(cmds_list, 0); // "a"
         string sub_cmd = llList2String(cmds_list, 1); // "b"
 
         if (cmd == "skip" || cmd == "next") {
             llSay(0, user_link(from) + " skips");
             next(FALSE);
+
+            // eagerly stop the screen and dont wait for the timer
+            if (idle_timeout_on_timer) {
+                stop();
+            }
+
             return;
         }
 
@@ -216,7 +277,19 @@ default
             if (is_playing == FALSE) return;
 
             stop();
+            push_history();
             llSay(0, user_link(from) + " stopped playback");
+            return;
+        }
+
+        if (cmd == "clear") {
+            if (llGetListLength(queue) == 0) {
+                llRegionSayTo(from, 0, "queue is already empty");
+                return;
+            }
+
+            queue = [];
+            llSay(0, user_link(from) + " cleared the queue");
             return;
         }
 
@@ -247,7 +320,7 @@ default
             }
 
             sync();
-            llSay(0, user_link(from) + " syncs playback (" + fmt_timestamp(playback_seconds) + ")");
+            llSay(0, user_link(from) + " syncs playback of all listeners (" + fmt_timestamp(playback_seconds) + ")");
             return;
         }
 
@@ -264,10 +337,44 @@ default
             return;
         }
 
+        if (cmd == "np") {
+            if (np_player_url == "") {
+                llRegionSayTo(from, 0, "nothing is currently playing");
+                return;
+            }
+
+            string say = "currently playing: " + hyperlink(np_title, np_source_url);
+
+            if (np_duration > 0) {
+                say += " (" + fmt_timestamp(playback_seconds) + " / " + fmt_timestamp(np_duration) + ")";
+            }
+
+            say += " , added by " + user_link(np_requested_by);
+
+            llRegionSayTo(from, 0, say);
+            return;
+        }
+
+        if (cmd == "history" || cmd == "h") {
+            say_list(from, history, "history");
+            return;
+        }
+
+        if (cmd == "queue" || cmd == "q") {
+            say_list(from, queue, "queue");
+            return;
+        }
+
+        if (cmd == "about" || cmd == "info" || cmd == "help") {
+            llRegionSayTo(from, 0, "sl-tv by malaises/furudean - https://tv.himawari.fun");
+            return;
+        }
+
         // we query an external web server for some meta data
         string request_url = API_BASE_URL + "/resolve?" +
-            "q=" + llEscapeURL(cmd) + 
-            "&u=" + (string)from;
+            "q=" + llEscapeURL(cmd) +
+            "&u=" + (string)from +
+            "&t=" + (string)llGetUnixTime(); // include a random value to make media refresh
 
         // the response is picked up in the http_response handler below
         llHTTPRequest(request_url, [], "");
@@ -275,15 +382,8 @@ default
 
     // handle meta data web server response
     http_response(key request_id, integer status, list metadata, string body) {
-        if (status >= 500) { 
-            llSay(0, "⚠️ could not connect to resolve server :-(");
-            llSay(0, body);
-            return; 
-        }
-
-        if (status >= 400) { 
-            llSay(0, "⚠️ could not resolve");
-            llSay(0, body);
+        if (status >= 400) {
+            llSay(0, "⚠️ error when resolving player info...\n---\nstatus " + (string)status + ": " + body + "\n---");
             return;
         }
 
@@ -300,7 +400,7 @@ default
             // starting from stopped state, or at end of queue
             next(TRUE);
         } else {
-            integer position = (llGetListLength(queue) / (QUEUE_STRIDE + 1)) - 1;
+            integer position = (llGetListLength(queue) / LIST_STRIDE) - 1;
             string say = user_link(requested_by) + " added \"" + title + "\" to queue";
 
             if (position == 0) {
