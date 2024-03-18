@@ -98,3 +98,14 @@ summary.h2 {
 	font-weight: bold;
 	margin-top: 4rem;
 }
+
+dt {
+	margin-top: 1rem;
+	font-weight: bold;
+}
+
+dd {
+	margin-bottom: 0.5rem;
+	margin-top: 0.5rem;
+	margin-left: 2rem;
+}

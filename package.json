@@ -22,6 +22,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@furudean/svelte-persistent-store": "^0.8.0",
 		"buffer-image-size": "^0.6.4",
 		"fast-average-color-node": "^2.6.0",
 		"googleapis": "^110.0.0",

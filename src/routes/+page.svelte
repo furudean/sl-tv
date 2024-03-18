@@ -1,5 +1,12 @@
 <script>
 	import texture_options from './texture_options.png'
+	import { persistent } from '@furudean/svelte-persistent-store'
+
+	const open = persistent({
+		key: 'how-it-works-open',
+		start_value: false,
+		storage_type: 'localStorage'
+	})
 
 	const payload = JSON.stringify(
 		{
@@ -44,41 +51,49 @@
 		>. you can change it if you need to by editing the script.
 	</p>
 
-	<ul>
-		<li>
-			<code>&lt;url&gt;</code> - play media from a url. example:
-			<code>/-1312 https://youtu.be/tN-C8-YZy24</code>
-		</li>
-		<li>
-			<code>np</code> - show what's currently playing
-		</li>
-		<li>
-			<code>pause</code> - pause the current playback
-		</li>
-		<li>
-			<code>resume</code> - resume the current playback
-		</li>
-		<li>
-			<code>stop</code> - stop the current playback
-		</li>
-		<li>
-			<code>seek &lt;time&gt;</code> - seek the current playback to a time. example:
-			<code>/-1312 seek 1:30</code>
-		</li>
-		<li>
-			<code>skip</code> - jump to the next media in the queue
-		</li>
-		<li>
-			<code>sync</code> - sync all listeners to the current timestamp. this is useful if someone's lagging
-			behind.
-		</li>
-		<li>
-			<code>queue</code>/<code>q</code> - add a media to the queue
-		</li>
-		<li>
-			<code>history</code>/<code>h</code> - show the last few media that were played
-		</li>
-	</ul>
+	<dl>
+		<dt><code>&lt;url&gt;</code></dt>
+		<dd>play media from a url.</dd>
+		<dd>example: <code>/-1312 https://youtu.be/tN-C8-YZy24</code></dd>
+
+		<dt><code>playskip &lt;url&gt;</code></dt>
+		<dd>play media from a url, and skip the current playback.</dd>
+		<dd>
+			example: <code>/-1312 playskip https://youtu.be/tN-C8-YZy24</code>
+		</dd>
+
+		<dt><code>np</code></dt>
+		<dd>show what's currently playing</dd>
+
+		<dt><code>pause</code></dt>
+		<dd>pause the current playback</dd>
+
+		<dt><code>resume</code></dt>
+		<dd>resume the current playback</dd>
+
+		<dt><code>stop</code></dt>
+		<dd>stop the current playback</dd>
+
+		<dt><code>seek &lt;time&gt;</code></dt>
+		<dd>seek the current playback to a time.</dd>
+		<dd>example: <code>/-1312 seek 1:30</code></dd>
+
+		<dt><code>skip</code></dt>
+		<dd>jump to the next thing in the queue</dd>
+
+		<dt><code>sync</code></dt>
+		<dd>
+			sync all listeners to the current timestamp. this is useful if someone's lagging behind.
+		</dd>
+
+		<dt><code>history</code>/<code>h</code></dt>
+		<dd>show past things that were played</dd>
+
+		<dt>
+			<code>about</code>/<code>info</code>/<code>help</code>
+		</dt>
+		<dd>show information about the screen</dd>
+	</dl>
 
 	<h2>setup</h2>
 	<p>
@@ -91,7 +106,7 @@
 		you may also be interested in the <a
 			href="https://github.com/furudean/sl-tv/blob/main/scripts/remote.lsl"
 			rel="external">remote.lsl</a
-		> script, which allows you to control the TV via a hud.
+		> script, which is a more user friendly way to control the TV via hud instead of chat.
 	</p>
 
 	<p>
@@ -116,7 +131,7 @@
 		feature helps inform people that something is playing, and how they can join in.
 	</p>
 
-	<details>
+	<details bind:open={$open}>
 		<summary class="h2">how it works</summary>
 
 		<p>
