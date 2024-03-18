@@ -56,7 +56,7 @@ export async function GET({ url }) {
 	}
 
 	if (BANDCAMP_DOMAINS.some(matches_host)) {
-		response = await get_bandcamp_response({ query })
+		response = await get_bandcamp_response({ query, fetch })
 	}
 
 	if (response instanceof Response) {
