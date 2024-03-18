@@ -120,9 +120,9 @@
 		<summary class="h2">how it works</summary>
 
 		<p>
-			once the screen receives a command, it will parse the message and execute the command. for
-			some commands, this means contacting a web server to fetch information about the media you
-			want to play.
+			once the screen receives a command, it will parse the message and execute it. for some
+			commands, this means contacting a web server to fetch information about the media you want to
+			play.
 		</p>
 		<p>
 			an example of this is the play command, which will need to match the URL provided against a

@@ -349,7 +349,7 @@ default
                 say += " (" + fmt_timestamp(playback_seconds) + " / " + fmt_timestamp(np_duration) + ")";
             }
 
-            say += " , added by " + user_link(np_requested_by);
+            say += ", added by " + user_link(np_requested_by);
 
             llRegionSayTo(from, 0, say);
             return;
