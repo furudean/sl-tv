@@ -31,6 +31,7 @@ list history = []; // same as queue
 integer LIST_STRIDE = 5;
 
 integer is_playing = FALSE;
+integer is_paused = FALSE;
 integer playback_seconds = 0;
 integer idle_timeout_on_timer = FALSE;
 
@@ -173,12 +174,14 @@ next(integer first) {
     if (llGetListLength(queue) == 0) {
         llSay(0, "reached end of queue");
         set_idle_timeout(IDLE_TIMEOUT);
+        is_playing = FALSE;
 
         return;
     }
 
     idle_timeout_on_timer = FALSE;
     is_playing = TRUE;
+    is_paused = FALSE;
     playback_seconds = 0;
 
     // queue is a strided list
@@ -213,6 +216,7 @@ stop() {
     np_duration = 0;
     np_requested_by = NULL_KEY;
     idle_timeout_on_timer = FALSE;
+    is_paused = FALSE;
 
     llSetTimerEvent(0.0);
     llClearLinkMedia(LINK_THIS, MEDIA_FACE);
@@ -221,6 +225,7 @@ stop() {
 
 pause() {
     is_playing = FALSE;
+    is_paused = TRUE;
 
     set_media(API_BASE_URL + np_player_url + "/paused");
     set_texture("on");
@@ -231,6 +236,7 @@ pause() {
 resume() {
     idle_timeout_on_timer = FALSE;
     is_playing = TRUE;
+    is_paused = FALSE;
 
     set_media(API_BASE_URL + np_player_url + "?t=" + (string)playback_seconds);
     set_texture("on");
@@ -431,7 +437,7 @@ default
         // queue is a strided list
         queue += [player_url, source_url, title, duration, requested_by];
 
-        if ((np_player_url == "" || idle_timeout_on_timer) && is_playing == FALSE) {
+        if (np_player_url == "" || idle_timeout_on_timer && is_paused == FALSE) {
             // starting from stopped state, or at end of queue
             next(TRUE);
         } else {
