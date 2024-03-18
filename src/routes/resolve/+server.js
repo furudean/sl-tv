@@ -30,6 +30,7 @@ const response_options = {
 export async function GET({ url }) {
 	const query = url.searchParams.get('q')
 	const requested_by = url.searchParams.get('u') ?? undefined
+	const is_play_skip = url.searchParams.get('s') === '1'
 
 	if (query === null) return text('missing parameter q', { status: 400 })
 
@@ -65,6 +66,7 @@ export async function GET({ url }) {
 
 	if (response) {
 		response.requested_by = requested_by
+		response.play_skip = is_play_skip
 
 		return json(response, response_options)
 	} else {

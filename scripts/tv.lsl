@@ -21,6 +21,8 @@ float IDLE_TIMEOUT = 90.0; // how many seconds to wait on queue end before endin
 
 // END CONFIGURATION
 
+string VERSION = "1.0.0";
+
 // this is a strided list
 // [string player_url, string source_url, string title, integer duration, key requested_by, ...]
 list queue = [];
@@ -149,6 +151,17 @@ push_history() {
     }
 
     history += [np_player_url, np_source_url, np_title, np_duration, np_requested_by];
+}
+
+resolve(string query, key from, integer play_skip) {
+    // we query an external web server for some meta data
+    string request_url = API_BASE_URL + "/resolve?" +
+        "q=" + llEscapeURL(query) +
+        "&u=" + (string)from +
+        "&s=" + (string)play_skip;
+
+    // the response is picked up in the http_response handler below
+    llHTTPRequest(request_url, [], "");
 }
 
 next(integer first) {
@@ -325,7 +338,7 @@ default
         }
 
         if (cmd == "seek") {
-            if (np_player_url == "") {
+            if (np_player_url == "" || idle_timeout_on_timer == TRUE) {
                 llRegionSayTo(from, 0, "something needs to be playing to seek!");
                 return;
             }
@@ -370,14 +383,12 @@ default
             return;
         }
 
-        // we query an external web server for some meta data
-        string request_url = API_BASE_URL + "/resolve?" +
-            "q=" + llEscapeURL(cmd) +
-            "&u=" + (string)from +
-            "&t=" + (string)llGetUnixTime(); // include a random value to make media refresh
+        if (cmd == "playskip") {
+            resolve(sub_cmd, from, 1);
+            return;
+        }
 
-        // the response is picked up in the http_response handler below
-        llHTTPRequest(request_url, [], "");
+        resolve(cmd, from, 0)
     }
 
     // handle meta data web server response
@@ -392,9 +403,18 @@ default
         string title = llJsonGetValue(body, ["title"]);
         integer duration = (integer)llJsonGetValue(body, ["duration"]);
         key requested_by = (key)llJsonGetValue(body, ["requested_by"]);
+        integer play_skip = (integer)llJsonGetValue(body, ["play_skip"]);
 
         // queue is a strided list
+        if (play_skip == TRUE) {
+            queue = [player_url, source_url, title, duration, requested_by] + queue;
+            llSay(0, user_link(requested_by) + " plays \"" + title + "\" (play skip)");
+            next(FALSE);
+            return;
+        }
+
         queue += [player_url, source_url, title, duration, requested_by];
+
 
         if (np_player_url == "" || idle_timeout_on_timer) {
             // starting from stopped state, or at end of queue
