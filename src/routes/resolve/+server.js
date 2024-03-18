@@ -1,7 +1,7 @@
 import { get_bandcamp_response } from '$lib/server/bandcamp'
 import { get_soundcloud_response } from '$lib/server/soundcloud'
 import { get_youtube_response } from '$lib/server/youtube'
-import { error, json } from '@sveltejs/kit'
+import { error, json, text } from '@sveltejs/kit'
 
 const YOUTUBE_DOMAINS = ['youtube.com', 'youtu.be']
 const SOUNDCLOUD_DOMAINS = ['soundcloud.com']
@@ -29,7 +29,7 @@ export async function GET({ url }) {
 	const query = url.searchParams.get('q')
 	const requested_by = url.searchParams.get('u') ?? undefined
 
-	if (query === null) throw error(400, 'missing parameter q')
+	if (query === null) return text('missing parameter q', { status: 400 })
 
 	/** @type {string | undefined} */
 	let hostname
@@ -37,7 +37,7 @@ export async function GET({ url }) {
 	try {
 		hostname = new URL(query).hostname
 	} catch {
-		throw error(400, 'invalid url in query')
+		return text('invalid url in query', { status: 400 })
 	}
 
 	const matches_host = host_match(hostname)
@@ -62,6 +62,6 @@ export async function GET({ url }) {
 
 		return json(response, response_options)
 	} else {
-		throw error(400, 'no supported url found in query')
+		return text('no supported url found in query', { status: 400 })
 	}
 }
