@@ -19,6 +19,7 @@ default
 
         string PROMPT = "\nenter youtube/soundcloud url\n\n" +
                         "or one of the following commands\n---\n" +
+                        "'playskip <url>' to play without queue\n" +
                         "'np' to show what's on\n" +
                         "'queue' to show what's up next\n" +
                         "'history' to what has played before\n" +
