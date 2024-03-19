@@ -28,7 +28,7 @@
 <main class="prose">
 	<h1>sl-tv</h1>
 	<p>
-		sl-tv is an open source media player for second life. it allows you to play youtube videos in a
+		sl-tv is an open source media player for second life. it allows you to play video & audio in a
 		somewhat synchronized fashion with other users in-world.
 	</p>
 

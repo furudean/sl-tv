@@ -1,8 +1,12 @@
 # sl-tv
 
-sl-tv is an open source video player system for second life. it allows you to
-play youtube & soundcloud videos in a somewhat synchronized fashion with other
-users, by embedding web content as second life shared media.
+sl-tv is an open source media player for second life. it allows you to play video & audio in a
+somewhat synchronized fashion with other users in-world.
+
+- supports youtube, bandcamp and soundcloud
+- playing, skipping, queueing
+- can list what's playing, queue and history on request
+- controlled via chat commands
 
 ## system
 
@@ -11,6 +15,8 @@ the system consists of three components;
 - a web frontend that embeds content from hosts
 - LSL scripts that open & control said embeds as shared media in-world
 - helpful APIs for parsing video metadata from provided URLs
+
+how this works exactly is better detailed on [the homepage](https://tv.himawari.fun/)
 
 ## developing
 
