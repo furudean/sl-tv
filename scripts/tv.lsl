@@ -148,6 +148,10 @@ say_list(key from, list items, string list_name) {
 }
 
 push_history() {
+    if (np_player_url == "") {
+        return;
+    }
+
     if (llGetListLength(history) / LIST_STRIDE >= HISTORY_MAX) {
         history = llDeleteSubList(history, 0, LIST_STRIDE - 1);
     }
@@ -167,10 +171,6 @@ resolve(string query, key from, integer play_skip) {
 }
 
 next(integer first) {
-    if (np_player_url != "") {
-        push_history();
-    }
-
     if (llGetListLength(queue) == 0) {
         llSay(0, "reached end of queue");
         set_idle_timeout(IDLE_TIMEOUT);
@@ -298,6 +298,7 @@ default
 
         if (cmd == "skip" || cmd == "next") {
             llSay(0, user_link(from) + " skips");
+            push_history();
             next(FALSE);
 
             // eagerly stop the screen and dont wait for the timer
@@ -311,8 +312,8 @@ default
         if (cmd == "stop") {
             if (is_playing == FALSE) return;
 
-            stop();
             push_history();
+            stop();
             llSay(0, user_link(from) + " stopped playback");
             return;
         }
@@ -430,6 +431,7 @@ default
 
         if (play_skip == TRUE) {
             queue = [player_url, source_url, title, duration, requested_by] + queue;
+            push_history();
             next(TRUE);
             return;
         }
@@ -455,19 +457,20 @@ default
     }
 
     timer() {
+        playback_seconds += 1;
+
         if (idle_timeout_on_timer) {
             idle_timeout_on_timer = FALSE;
-            llSetTimerEvent(0.0);
-
+            llSetTimerEvent(0.0);\
+            push_history();
             stop();
             return;
         }
 
-        playback_seconds += 1;
-
         // np_duration = 0 probably means live stream
         if (np_duration != 0 && playback_seconds > np_duration) {
             llSetTimerEvent(0.0);
+            push_history();
             next(FALSE);
         }
     }
