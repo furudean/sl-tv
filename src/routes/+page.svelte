@@ -86,6 +86,11 @@
 			sync all listeners to the current timestamp. this is useful if someone's lagging behind.
 		</dd>
 
+		<dt>
+			<code>queue</code>/<code>q</code>
+		</dt>
+		<dd>show what's up next</dd>
+
 		<dt><code>history</code>/<code>h</code></dt>
 		<dd>show past things that were played</dd>
 
